@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="continstApp">
+	<head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	    <title>Continst</title>
+	    
+    	<link href="app/styles/continst.css" rel="stylesheet" type="text/css" />
+	</head>
+	
+	<body ng-controller="CtrlContinst">
+	
+		<div ng-if="!$root.username">
+		
+			<form name="ci_login" novalidate>
+				<div class="form-group" ng-class="{ 'has-error': ci_login.username.$error.required }">
+					<div class="input-group">
+						<span class="input-group-addon">
+							Username:
+						</span>
+						<input placeholder="Username" name="username" ng-model="$parent.username" type="text" required class="form-control">
+						<span class="input-group-btn">
+							<button ng-disabled="!ci_login.$valid" class="btn btn-default" ng-click="auth(ci_login)"><i class="fa fa-lock"></i> Submit</button>
+						</span>
+					</div>
+				</div>
+				<span ng-show="ci_login.username.$error.required" class="text-danger">Required</span>
+			</form>
+		</div>
+		<div ng-if="$root.username">
+			<div class="hidden">
+				<h5>User authenticated</h5>
+				username: {{$root.username}}
+				<br>
+				number of connected users: {{$root.clients_count}}
+				<br>
+				<button ng-click="logout()">Logout</button>
+				<br>
+				<hr>
+				<h5>Insert new image</h5>
+				Image URL: <input type="text" ng-model="$parent.image_url" /><button ng-click="image_send()">Send</button>
+				<br>
+				<hr>
+				<h5>Get from instagram</h5>
+				<button ng-if="!updating" ng-click="update()">Update</button><small ng-if="updating">...loading...</small>
+				<br>
+				<hr>
+			</div>
+			<div class="container">
+				<div class="row" ng-init="max_visible=8;visible_elements=max_visible;comments_active=false;">
+					<div class="ci-post col-xs-12 col-sm-4 col-md-3" bindonce ng-repeat="element in elements" ng-swipe-left="toggleSlideHandleLeft()" ng-swipe-right="toggleSlideHandleRight()">
+						<div class="ci-post-container">
+							<div class="ci-post-image">
+								<img bo-src="element.url" ng-click="openImage(element.url)" />
+							</div>
+							<div class="ci-post-panel ci-post-comments" ng-class="{'active':comments_active}">
+		                		<div class="ci-post-panel-header">Comment with your friends</div>
+		                		<ul class="ci-post-panel-body list-group">
+									<li class="list-group-item" ng-repeat="comment in element.comments.data"><b>{{comment.username}}</b> {{comment.text}}</li>
+									<li class="list-group-item" ng-if="element.comments.data.length==0">No comments yet!</li>
+		                		</ul>
+			                	<div class="ci-post-panel-footer">
+			                		<form ng-submit="comment(element.url,element._id)">
+										<div class="input-group">
+											<input type="text" class="form-control" ng-model="comments[element._id]" placeholder="Say something nice!" />
+											<span class="input-group-btn">
+												<button class="btn btn-default" type="submit">Send</button>
+											</span>
+										</div>
+									</form>
+			                	</div>
+							</div>
+							<div class="ci-post-panel ci-post-sharing" ng-class="{'active':sharing_active}">
+								<div class="ci-post-panel-header">Share with your friends!</div>
+								<div class="ci-post-panel-body list-group">
+				                	<a class="list-group-item" href="https://facebook.com" target="_blank">
+				                		Facebook
+				                	</a>
+				                	<a class="list-group-item" href="https://facebook.com" target="_blank">
+				                		Google+
+				                	</a>
+				                	<a class="list-group-item" href="https://facebook.com" target="_blank">
+				                		Twitter
+				                	</a>
+				                	<a class="list-group-item" href="https://facebook.com" target="_blank">
+				                		Instagram
+				                	</a>
+			                	</div>
+							</div>
+						</div>
+						<!-- <div class="ci-post-footer">
+							{{element.votes.count.score}} <i class="fa fa-heart"></i>
+						</div>-->
+						<div class="ci-post-main-options">
+							<div class="btn-group btn-group-justified">
+								<a ng-click="toggleSharing()" class="btn btn-default btn-sm" ng-class="{'active':sharing_active}"><i class="fa fa-share-alt"></i></a>
+								<a ng-click="vote(element.url,false)" class="btn btn-danger btn-sm"><i class="fa fa-thumbs-down"></i></a>
+								<a class="btn btn-default btn-sm"><i class="fa fa-heart ci-pink"></i><br>{{element.votes.count.score}}</a>
+								<a ng-click="vote(element.url,true)" class="btn btn-success btn-sm"><i class="fa fa-thumbs-up"></i></a>
+								<a ng-click="toggleComments()" class="btn btn-default btn-sm" ng-class="{'active':comments_active}"><i class="fa fa-comment"></i><br>{{element.comments.count}}</a>
+							</div>
+						</div>
+						<!-- <div class="ci-post-main-options">
+							<div class="btn-group btn-group-justified">
+								<a ng-click="toggleSharing()" class="btn btn-default btn-sm"><i class="fa fa-share-alt"></i></a>
+								<a ng-click="vote(element.url,true)" class="btn btn-default btn-sm"><i class="fa fa-thumbs-up"></i><br>{{element.votes.count.up}}</a>
+								<a disabled class="btn btn-default btn-sm"><i class="fa fa-heart"></i><br>{{element.votes.count.score}}</a>
+								<a ng-click="vote(element.url,false)" class="btn btn-default btn-sm"><i class="fa fa-thumbs-down"></i><br>{{element.votes.count.down}}</a>
+								<a ng-click="toggleComments()" class="btn btn-default btn-sm"><i class="fa fa-comment"></i><br>{{element.comments.count}}</a>
+							</div>
+						</div>-->
+					</div>
+				</div>
+				<button class="btn btn-primary btn-block" in-view="visible_elements = visible_elements + max_visible" ng-click="visible_elements = visible_elements + max_visible">Load more</button>
+			</div>
+		</div>
+		<br><br>
+		
+		<script type="text/ng-template" id="ci-modal-image.html">
+			<div class="modal-body text-center">
+				<div class="ci-modal-close-info" ng-click="close()">Click anywhere to close</div><br>
+				<img ng-click="close()" src="{{image}}" />
+			</div>
+		</script>	
+	
+	<!-- Bootstrap core JavaScript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script type="text/javascript" src="app/assets/bower_components/angular/angular.min.js"></script>
+	<script type="text/javascript" src="node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
+	<script type="text/javascript" src="app/assets/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+	<script type="text/javascript" src="app/assets/bower_components/angular-inview/angular-inview.js"></script>
+	<script type="text/javascript" src="app/assets/bower_components/angular-touch/angular-touch.min.js"></script>
+	<script type="text/javascript" src="app/assets/bower_components/angular-bindonce/bindonce.min.js"></script>
+	<script type="text/javascript" src="app/continst-app.js"></script>
+	<script type="text/javascript" src="app/controllers/ctrl.continst.js"></script>
+	<script type="text/javascript" src="app/services/serv.continst.js"></script>
+	</body>
+</html>

@@ -1,0 +1,273 @@
+@import "mixins";
+@import "../assets/bower_components/font-awesome/less/font-awesome";
+@import "../assets/bower_components/bootstrap/dist/css/bootstrap.min.css";
+@import "roboto/roboto.css";
+@import "ci-elements/ci-modals";
+
+@sf-color-main: #60718b;
+@sf-color-input: #dddddd;
+@sf-color-pink: #ff60a0;
+
+html {
+	.user-select(none);
+	body {
+		background:@sf-color-main;
+		font-family: Roboto Light;
+		color:#333;
+		.btn {
+	    	margin:0;
+	   	}
+		.ci-post {
+			margin:10px 0px;
+	    	-webkit-animation: ci-post-reveal .5s;
+	    	
+			.ci-post-container {
+				overflow-y:auto;
+				overflow-x:hidden;
+				position:relative;
+				height:300px;
+	    		z-index:2;
+	    		box-shadow: 0px 2px 4px rgba(0,0,0,.6);
+				
+				.ci-post-image {
+	    			position:absolute;
+	    			top:0px;
+	    			left:0px;
+	    			right:0px;
+	    			bottom:0px;
+	    			background:#161616;
+	    			text-align:center;
+	    			img {
+	    				display:inline-block;
+	    				height:100%;
+	    				cursor:pointer;
+	    			}
+				}
+				
+	    		.ci-post-panel {
+	    			position:absolute;
+	    			top:0px;
+	    			left:0px;
+	    			right:0px;
+	    			bottom:0px;
+	    			background:#fff;
+	    			.transition(all .4s ease-in-out);
+	    			opacity:0;
+	    			font-size:.8em;
+	    			&.ci-post-sharing {
+	    				.transform(translate3d(-100%,0,0));
+	    			}
+	    			&.ci-post-comments {
+	    				.transform(translate3d(100%,0,0));
+	    				.ci-post-panel-body {
+							position:absolute;
+							top:25px;
+							left:0;
+							right:0;
+							bottom:36px;
+							overflow:auto;
+	    				}
+						.ci-post-panel-footer {
+							position:absolute;
+							height:36px;
+							left:0;
+							right:0;
+							bottom:0px;
+							padding:3px 5px;
+							background:#eee;
+							overflow: hidden;
+							.input-group {
+								background:0;
+								border-radius:0;
+								position:relative;
+								display:block;
+								height:30px;
+								* {
+									background:0;
+									border-radius:0;
+									border:0;
+									box-shadow:none;
+								}
+								input {
+									position:absolute;
+									left:0;
+									right:0;
+									bottom:0;
+									z-index:2;
+									height:26px;
+									line-height:26px;
+									font-size:12px;
+									color:#333333;
+									padding-left:5px;
+									padding-right:45px;
+									background: transparent;
+  									border: none;
+  									-moz-box-sizing: border-box;
+  									-webkit-box-sizing: border-box;
+  									box-sizing: border-box;
+									background: bottom left -moz-linear-gradient(@sf-color-input, @sf-color-input) no-repeat, bottom center -moz-linear-gradient(@sf-color-input, @sf-color-input) repeat-x, bottom right -moz-linear-gradient(@sf-color-input, @sf-color-input) no-repeat;
+									background: bottom left -webkit-linear-gradient(@sf-color-input, @sf-color-input) no-repeat, bottom center -webkit-linear-gradient(@sf-color-input, @sf-color-input) repeat-x, bottom right -webkit-linear-gradient(@sf-color-input, @sf-color-input) no-repeat;
+									background: bottom left linear-gradient(@sf-color-input, @sf-color-input) no-repeat, bottom center linear-gradient(@sf-color-input, @sf-color-input) repeat-x, bottom right linear-gradient(@sf-color-input, @sf-color-input) no-repeat;
+									-moz-background-size: 1px 6px, 1px 1px, 1px 6px;
+									-o-background-size: 1px 6px, 1px 1px, 1px 6px;
+									-webkit-background-size: 1px 6px, 1px 1px, 1px 6px;
+									background-size: 1px 6px, 1px 1px, 1px 6px;
+									&:focus {
+										background: bottom left -moz-linear-gradient(@sf-color-main, @sf-color-main) no-repeat, bottom center -moz-linear-gradient(@sf-color-main, @sf-color-main) repeat-x, bottom right -moz-linear-gradient(@sf-color-main, @sf-color-main) no-repeat;
+										background: bottom left -webkit-linear-gradient(@sf-color-main, @sf-color-main) no-repeat, bottom center -webkit-linear-gradient(@sf-color-main, @sf-color-main) repeat-x, bottom right -webkit-linear-gradient(@sf-color-main, @sf-color-main) no-repeat;
+										background: bottom left linear-gradient(@sf-color-main, @sf-color-main) no-repeat, bottom center linear-gradient(@sf-color-main, @sf-color-main) repeat-x, bottom right linear-gradient(@sf-color-main, @sf-color-main) no-repeat;
+										-moz-background-size: 1px 6px, 1px 1px, 1px 6px;
+										-o-background-size: 1px 6px, 1px 1px, 1px 6px;
+										-webkit-background-size: 1px 6px, 1px 1px, 1px 6px;
+										background-size: 1px 6px, 1px 1px, 1px 6px;
+									}
+  								}
+  								.input-group-btn {
+  									position:absolute;
+  									right:2px;
+  									bottom:2px;
+  									height:24px;
+  									width:40px;
+  									z-index:3;
+  									background:@sf-color-input;
+  									.btn {
+  										padding:0;
+  										font-size:12px;
+  										line-height:24px;
+  										width:40px;
+  										text-align:center;
+  										outline:0!important;
+  										&:hover {
+  											background:@sf-color-main;
+  											color:#fff;  											
+  										}
+  									}
+  								}
+							}
+						}
+	    			}
+    				&.active {
+    					.transform(translate3d(0%,0,0));
+    					opacity:1;
+    				}
+    				.ci-post-panel-header {
+						background:#eee;
+						display:block;
+						text-align:center;
+						color:@sf-color-main;
+						height:25px;
+						line-height:25px;
+						font-weight:700;
+						text-transform:uppercase;
+						font-family:Roboto;
+						font-size:11px;
+    				}
+					.ci-post-panel-body {
+						margin:0;
+						.list-group-item {
+							text-align:left;
+							border-radius: 0px;
+						}
+					}
+	    		}
+			}
+			.ci-post-main-options {
+				box-shadow: 0px 2px 4px rgba(0,0,0,.6);
+	    		.transition(all .2s ease-in-out);
+	    		//.transform(translate3d(0,-100%,0));
+	    		position:relative;
+	    		z-index:1;
+	    		margin:0px 10px;
+				background:#dddddd;
+				.multiple-border-radius(0px,5px,5px,0px);
+	    		.btn {
+	    			background:0;
+	    			border:0;
+	    			border-radius:0;
+	    			box-shadow:none;
+	    			outline:0;
+	    			padding:5px 0px!important;
+	    			line-height:1.3;
+	    			font-size:10px;
+	    			position:relative;
+	    			.fa {
+	    				font-size:14px;
+	    				color:#bbb;
+						&.ci-pink {
+							color:@sf-color-pink;
+						}
+	    			}
+	    			&:hover .fa:not(.ci-pink),
+	    			&.active .fa {
+	    				color:@sf-color-main;
+	    			}
+	    			&.btn-danger:hover .fa,
+	    			&.btn-danger.active .fa {
+	    				color:red;
+	    			}
+	    			&.btn-success:hover .fa,
+	    			&.btn-success.active .fa {
+	    				color:green;
+	    			}
+	    			
+					&:after {
+						content:'';
+						position:absolute;
+						bottom:2px;
+						left:50%;
+						height:3px;
+						width:0px;
+						margin-left:0px;
+						.multiple-border-radius(3px,3px,3px,3px);							
+						background:@sf-color-main;
+						opacity:0;
+						.transition(all .2s linear);
+					}
+					&.active:after {
+						width:20px;
+						margin-left:-10px;
+						opacity:1;
+					}
+	    			
+	    		}
+			}
+			&:hover .ci-post-main-options {
+				//.transform(translate3d(0,0,0));
+			}
+			.ci-post-footer {
+	    		height:24px;
+	    		line-height:24px;
+	    		margin-bottom:-24px;
+	    		display:block;
+	    		text-align:right;
+	    		color:rgba(0,0,0,.5);
+	    		font-size:.8em;
+	    		padding:0 5px;
+	    		i {
+	    			font-size:12px;
+	    		}
+			}
+		}
+	}
+}
+
+@-webkit-keyframes ci-post-reveal {
+	from {opacity: 0;-webkit-transform:scale(0,0);}
+	to {opacity: 1;-webkit-transform:scale(1,1);}
+}
+
+@media (min-width: 768px) {
+	html body .ci-post .ci-post-container {
+		height:220px;
+	}
+}
+@media (min-width: 992px) {
+	html body .ci-post .ci-post-container {
+		height:213px;		
+	}
+}
+@media (min-width: 1200px) {
+	html body .ci-post .ci-post-container {
+		height:263px;		
+	}
+}
